@@ -22,11 +22,16 @@ from latent_rationale.beer.evaluate import \
     evaluate_rationale, get_examples, evaluate_loss
 from latent_rationale.common.util import make_kv_string
 
+import wandb
+
 
 def train():
     """
     Main training loop.
     """
+    
+    wandb.init(project="bastings")
+    
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print("device:", device)
 
@@ -162,10 +167,12 @@ def train():
 
                 # print main loss, lr, and optional stuff defined by the model
                 writer.add_scalar('train/loss', loss.item(), iter_i)
+                wandb.log({'train/loss':loss.item(),"train/lr":cur_lr})
                 cur_lr = scheduler.optimizer.param_groups[0]["lr"]
                 writer.add_scalar('train/lr', cur_lr, iter_i)
 
                 for k, v in loss_optional.items():
+                    wandb.log({'train/%s' % k:v})
                     writer.add_scalar('train/%s' % k, v, iter_i)
 
                 # print info to console
