@@ -107,7 +107,7 @@ class DependentGenerator(nn.Module):
         batch_size, time = x.size()
         lengths = mask.sum(1)
         emb = self.embed_layer(x)  # [B, T, E]
-        h, _ = self.enc_layer(emb, mask, lengths)
+        h, _ = self.enc_layer(emb, mask, lengths.cpu())
 
         # predict z for each time step conditioning on previous z
 
