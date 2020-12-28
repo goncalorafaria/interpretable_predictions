@@ -71,7 +71,7 @@ class Classifier(nn.Module):
         lengths = mask.long().sum(1)
 
         # encode the sentence
-        _, final = self.enc_layer(emb, rnn_mask, lengths)
+        _, final = self.enc_layer(emb, rnn_mask, lengths.cpu())
 
         # predict sentiment from final state(s)
         y = self.output_layer(final)
